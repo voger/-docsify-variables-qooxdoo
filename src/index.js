@@ -5,7 +5,7 @@ var variablesFile = null;
 
 function resolveVariable(variable) {
   if (variablesFile && variablesObj === null) {
-    initializeVariablesObject();
+    variablesObj = initializeVariablesObject();
   }
 
   var normalizedVariable = variable;
@@ -17,7 +17,7 @@ function resolveVariable(variable) {
   var returnVal = null;
   try {
     var jsonPath = require("jsonpath-plus").JSONPath;
-    returnVal = jsonPath({path: variable, json: variablesObj});
+    returnVal = jsonPath({path: normalizedVariable, json: variablesObj});
   } catch(e) {
     returnVal = "#{" + variable + "}";
   }
@@ -32,6 +32,7 @@ function initializeVariablesObject() {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", variablesFile, false);
     xhttp.send();
+
     returnVal = JSON.parse(xhttp.response);
   }
 
